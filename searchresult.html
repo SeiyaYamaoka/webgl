@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <title>My production record</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css">
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="style.css">
+
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    
+                    <a class="navbar-brand" href="index.html">
+                            My production record </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="index.html">Home</a></li>
+                        <li><a href="https://github.com/SeiyaYamaoka" target="_blank">Github</a></li>
+                        <li><a href="http://arrowblog.xyz" target="_blank">Blog</a></li>
+                        <li><a href="https://twitter.com/9529yaya" target="_blank">Contact</a></li>
+                    </ul>
+                
+                    <form action = "searchresult.html" method = "get">
+                            <div class="input-group search">
+                            <input type="text" class="form-control" placeholder="" name="search-key">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default" value="" method="get">検索</button>
+                            </span>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                
+                        <h1>検索結果</h1>
+                <div class="row">
+                        <ul id="ul">
+                            
+                        </ul>
+                </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script>
+        　//URLのパラメーターを取得
+          let v = new URLSearchParams(window.location.search);
+        　//URLのパラメーターのうち検索されたキーワードを取得
+          v = v.get('search-key');
+          console.log(v);   
+        　//検索したい全てのURLを配列に格納
+          const urlLists = [
+            "three.js/sample01/index.html",
+            "three.js/sample02/index.html",
+            "three.js/sample03/index.html",
+            "three.js/sample04/index.html",
+            "three.js/sample05/index.html",
+            "three.js/sample06/index.html"];
+          $.each(urlLists, function(i){
+            //console.log(urlLists+':'+i);  
+            $.ajax({
+              url　: urlLists[i],
+              dataType : 'html',
+              success　: function(data){
+                // console.log($('title').html());  //タイトルのみ取れた？
+                // console.log(data);    //タグ含め全部
+                // console.log($(data).text());  //テキストのみだがCSSとってきてる・
+                // console.log($(data).find('h2').text()); //body直下にはfindはとれない　filterにする
+                
+        　　　   //上記のURLからキーワードを探す
+                if( $(data).text().indexOf(v) !== -1){
+        　　　　　　//あれば、ページを表示する
+                //   $('<li><a href="' + urlLists[i] + '">' +$(data).find("h1").text() + '</a></li>').appendTo('ul');
+                    $('<div class="col-md-12"><li><a href="' + urlLists[i] + '">' + $(data).filter('title').text() + '</a></li><p>' 
+                    + $(data).filter('#explanation').text() + //説明
+                     '</p></div>').appendTo('#ul');
+                  }else{
+                    //console.log(3); 
+                  }
+                },
+                error: function(data){
+                  //console.log("error")
+                }
+              });
+            });
+        </script>
+    </body>
+</html>
